@@ -47,8 +47,6 @@
             <version>5.0.1</version>
         </dependency>
 
-
-
     </dependencies>
     <properties>
         <maven.compiler.source>23</maven.compiler.source>

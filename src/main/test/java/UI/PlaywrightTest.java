@@ -1,37 +1,45 @@
 package UI;
 
-import com.google.inject.Inject;
 import com.microsoft.playwright.Page;
+import org.testng.annotations.AfterSuite;
 import org.testng.annotations.Guice;
 import org.testng.annotations.Test;
-import com.microsoft.playwright.Locator;
 import playwright.PlaywrightManagement;
-
-import javax.swing.*;
 
 @Guice
 public class PlaywrightTest {
-    @Inject
-    private PlaywrightManagement playwrightManagement;
 
     @Test
     public void openPage() {
-        String url = "https://www.ozon.ru/";
-        playwrightManagement.setupPlaywright(url);
+        String url = "https://google.ru";
+        Page page = PlaywrightManagement.setupPlaywright(url);
     }
+
     @Test
     public void searchPage() {
-        String url = "https://www.ozon.ru/?__rr=1&abt_att=1&origin_referer=www.google.com";
-        Page page = playwrightManagement.setupPlaywright(url);
+        String url = "https://ya.ru/";
+        Page page = PlaywrightManagement.setupPlaywright(url);
 
-        page.locator("#stickyHeader > div > div.i3d_9 > div > div > form > div > div.iaa5_33 > input").fill("Книга");
-        page.click("#stickyHeader > div > div.i3d_9 > div > div > form > button > div");
+        // Ожидаем появления поля поиска
+        page.waitForSelector("#text");
 
-        String pageContent = page.content();
-        if (pageContent.contains("Книги")) {
-            System.out.println("Страница откылась");
+        // Заполняем поле поиска
+        page.locator("#text").fill("Книга");
+        page.keyboard().press("Enter");
+
+        // Ожидаем загрузки блока с результатами (например, #RelatedBottom)
+        page.waitForSelector("#RelatedBottom", new Page.WaitForSelectorOptions().setTimeout(10000));
+
+        // Проверяем, что блок с результатами видим
+        if (page.locator("#RelatedBottom").isVisible()) {
+            System.out.println("Страница открылась");
         } else {
             System.out.println("Страница не открылась :(");
         }
     }
+
+    @AfterSuite
+    public void tearDown() {
+        PlaywrightManagement.close();
     }
+}

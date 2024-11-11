@@ -20,17 +20,13 @@ public class PlaywrightTest {
         String url = "https://ya.ru/";
         Page page = PlaywrightManagement.setupPlaywright(url);
 
-        // Ожидаем появления поля поиска
         page.waitForSelector("#text");
 
-        // Заполняем поле поиска
         page.locator("#text").fill("Книга");
         page.keyboard().press("Enter");
 
-        // Ожидаем загрузки блока с результатами (например, #RelatedBottom)
         page.waitForSelector("#RelatedBottom", new Page.WaitForSelectorOptions().setTimeout(10000));
 
-        // Проверяем, что блок с результатами видим
         if (page.locator("#RelatedBottom").isVisible()) {
             System.out.println("Страница открылась");
         } else {

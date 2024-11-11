@@ -30,7 +30,7 @@ public class PlaywrightTest {
         if (page.locator("#RelatedBottom").isVisible()) {
             System.out.println("Страница открылась");
         } else {
-            System.out.println("Страница не открылась :(");
+            System.out.println("Страница не открылась");
         }
     }
 

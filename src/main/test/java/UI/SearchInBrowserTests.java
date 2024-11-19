@@ -10,14 +10,7 @@ import io.qameta.allure.Step;
 
 
 @Guice
-public class PlaywrightTest {
-
-    @Test
-    @Description("Открытие страницы Google")
-    public void openPage() {
-        String url = "https://google.ru";
-        Page page = PlaywrightManagement.setupPlaywright(url);
-    }
+public class SearchInBrowserTests {
 
     @Test
     @Description("Поиск и открытие страницы в Яндексе")

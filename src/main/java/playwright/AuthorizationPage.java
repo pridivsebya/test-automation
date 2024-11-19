@@ -1,6 +1,7 @@
 package playwright;
 
 import com.microsoft.playwright.Page;
+import io.qameta.allure.Step;
 
 
 public class AuthorizationPage {
@@ -9,17 +10,16 @@ public class AuthorizationPage {
     public AuthorizationPage(Page page) {
         this.page = page ;
     }
-    public void fillUserName(String value) {
+
+    @Step("Авторизация")
+    public void UserLogin(String name, String pass) {
         page.waitForSelector("#user-name");
-        page.locator("#user-name").fill(value);
-    }
-    public void fillUserPass(String value) {
         page.waitForSelector("#password");
-        page.locator("#password").fill(value);
-    }
-    public void pressButton() {
+        page.locator("#user-name").fill(name);
+        page.locator("#password").fill(pass);
         page.locator("#login-button").click();
     }
+
     public boolean isAuthorized() {
         return page.locator("#page_wrapper > footer > div").isVisible();
     }

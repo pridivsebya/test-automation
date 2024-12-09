@@ -1,5 +1,6 @@
 package playwright;
 
+import com.google.inject.Inject;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.AriaRole;
@@ -8,32 +9,42 @@ import io.qameta.allure.Step;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static playwright.PlaywrightManagement.page;
-
 public class ShoppingPage extends AbstractPage {
 
+    @Inject
+    private AbstractPage abstractPage;
+    @Inject
+    private AuthorizationPage authorizationPage;
+    @Inject
+    private PlaywrightManagement playwrightManagement;
+    @Inject
+    private Page page;
+    @Inject
+    private CheckoutPage checkoutPage;
+
+
     public Locator addToCartButton() {
-        return getByAriaRole(AriaRole.BUTTON, "Add to cart");
+        return getByText( "Add to cart");
     }
 
     public Locator addToCartSomeone() {
-        return getByAriaRole(AriaRole.BUTTON, "#add-to-cart-sauce-labs-backpack");
+        return getByLocator("[data-test='add-to-cart-sauce-labs-backpack']");
     }
 
     public Locator removeButton() {
-        return getByAriaRole(AriaRole.BUTTON, "Remove");
+        return getByText( "Remove");
     }
 
     public Locator shoppingCart() {
-        return getByAriaRole(AriaRole.LINK, "shopping_cart_container > a");
+        return getByLocator("[data-test='shopping-cart-link']");
     }
 
     public Locator title() {
-        return getByAriaRole(AriaRole.HEADING, "Products");
+        return getByText( "Products");
     }
 
     public Locator inventoryList() {
-        return getByAriaRole(AriaRole.LIST, "inventory-list");
+        return getByLocator( "[data-test='inventory-list']");
     }
 
     public Locator openMenu() {
@@ -41,15 +52,15 @@ public class ShoppingPage extends AbstractPage {
     }
 
     public Locator productName() {
-        return getByAriaRole(AriaRole.GENERIC, "#item_4_title_link > div");
+        return getByLocator("a.inventory_item_name");
     }
 
     public Locator productImg() {
-        return getByAriaRole(AriaRole.LINK, "#item_4_img_link > img");
+        return getByLocator("img.inventory_item_img");
     }
 
-    public void buttonBack() {
-        getByAriaRole(AriaRole.BUTTON, "back-to-products");
+    public Locator buttonBack() {
+        return getByText("back-to-products");
     }
 
     public Locator continueShoppingButton() {
@@ -76,7 +87,7 @@ public class ShoppingPage extends AbstractPage {
     }
 
     public Locator socialTwitter() {
-        return getByAriaRole(AriaRole.LINK, "#page_wrapper > footer > ul > li.social_twitter > a");
+        return page.locator( "social_twitter");
     }
 
     @Step("Проверка, что открыта страница Twitter")

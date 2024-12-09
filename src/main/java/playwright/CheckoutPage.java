@@ -1,5 +1,6 @@
 package playwright;
 
+import com.google.inject.Inject;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.AriaRole;
@@ -11,6 +12,17 @@ import java.util.stream.Collectors;
 import static playwright.PlaywrightManagement.page;
 
 public class CheckoutPage extends AbstractPage {
+
+    @Inject
+    private ShoppingPage shoppingPage;
+    @Inject
+    private AbstractPage abstractPage;
+    @Inject
+    private AuthorizationPage authorizationPage;
+    @Inject
+    private PlaywrightManagement playwrightManagement;
+    @Inject
+    private Page page;
 
     public Locator checkout() {
         return getByAriaRole(AriaRole.BUTTON, "#checkout");

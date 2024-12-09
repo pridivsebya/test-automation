@@ -51,6 +51,9 @@ public class ShoppingStoreTest {
 
         step("Авторизация");
         authorizationPage.loggedIn();
+
+        step("Закрытие браузера");
+        abstractPage.closePlaywright();
     }
 
 
@@ -64,7 +67,7 @@ public class ShoppingStoreTest {
 
         step("Оставить поля ввода пустыми");
         authorizationPage.UserLogin("", "");
-       // assert authorizationPage.errorMessage().isVisible() : "Локатор ошибки не найден";
+        assert authorizationPage.errorMessage().isVisible() : "Локатор ошибки не найден";
 
         abstractPage.reloadPage();
 
@@ -89,6 +92,9 @@ public class ShoppingStoreTest {
         step("Ввести неверный пароль и правильный логин");
         authorizationPage.UserLogin("standard_user", "no-secret_sauce");
         assert authorizationPage.errorMessage().isVisible() : "Локатор ошибки не найден";
+
+        step("Закрытие браузера");
+        abstractPage.closePlaywright();
     }
 
 
@@ -104,12 +110,17 @@ public class ShoppingStoreTest {
         authorizationPage.UserLogin("standard_user", "secret_sauce");
 
         step("Проверка наличия всех атрибутов");
-        assert shoppingPage.addToCartButton().isVisible() : "Кнопка добавить в корзину отсутствует";
+        for (int i = 0; i < shoppingPage.addToCartButton().count(); i++) {
+            assert shoppingPage.addToCartButton().nth(i).isVisible() : "Кнопка добавить в корзину отсутствует"; }
         assert shoppingPage.shoppingCart().isVisible() : "Кнопка корзины отсутствует";
-        assert shoppingPage.removeButton().isVisible() : "Кнопка удалить из корзины отсутствует";
+        for (int i = 0; i < shoppingPage.removeButton().count(); i++) {
+            assert shoppingPage.removeButton().isVisible() : "Кнопка удалить из корзины отсутствует"; }
         assert shoppingPage.title().isVisible() : "Заголовок отсутствует";
         assert shoppingPage.inventoryList().isVisible() : "Лист с продуктами отсутствует";
         assert shoppingPage.openMenu().isVisible() : "Кнопка открытия меню отсутствует";
+
+        step("Закрытие браузера");
+        abstractPage.closePlaywright();
     }
 
 
@@ -130,8 +141,12 @@ public class ShoppingStoreTest {
         }
         step("Удалить из корзины все добавленные товары с главной страницы");
         for (int i = 0; i < shoppingPage.removeButton().count(); i++) {
-            shoppingPage.addToCartButton().nth(i).click();
+
+            shoppingPage.removeButton().nth(i).click();
         }
+
+        step("Закрытие браузера");
+        abstractPage.closePlaywright();
     }
 
 
@@ -146,14 +161,16 @@ public class ShoppingStoreTest {
         step("Вход в систему");
         authorizationPage.UserLogin("standard_user", "secret_sauce");
 
+    //waiting for locator("img.inventory_item_img")
         step("Открыть карточку товара нажатием на картинку");
-        // abstractPage.click(shoppingPage.productImg());
+        shoppingPage.productImg().click();
 
         step("Вернуться на главную страницу");
         shoppingPage.buttonBack();
 
+    //та же ошибка
         step("Открыть карточку товара нажатием на название товара");
-        // abstractPage.click(shoppingPage.productName());
+        shoppingPage.productName().click();
 
         step("Положить товар в корзину");
         shoppingPage.addToCartButton();
@@ -163,6 +180,9 @@ public class ShoppingStoreTest {
 
         step("Вернуться на главную страницу");
         shoppingPage.buttonBack();
+
+        step("Закрытие браузера");
+        abstractPage.closePlaywright();
     }
 
 
@@ -201,6 +221,9 @@ public class ShoppingStoreTest {
         List<Double> sortedPricesHL = productPrices.stream().sorted(Collections.reverseOrder()).collect(Collectors.toList());
 
         assertEquals(productPrices, sortedPricesHL, "Сортировка high to low некорректна");
+
+        step("Закрытие браузера");
+        abstractPage.closePlaywright();
     }
 
 
@@ -214,6 +237,7 @@ public class ShoppingStoreTest {
         step("Вход в систему");
         authorizationPage.UserLogin("standard_user", "secret_sauce");
 
+    //не находит ни один локатор соц сетей
         step("Нажимаем на иконку Твиттера");
         abstractPage.click(shoppingPage.socialTwitter());
 
@@ -240,6 +264,9 @@ public class ShoppingStoreTest {
 
         step("Проверка совпадения страниц");
         assert shoppingPage.isLinkedinPagesOpened(page): "Открылась не та страница Linkedin";
+
+        step("Закрытие браузера");
+        abstractPage.closePlaywright();
     }
 
 
@@ -254,12 +281,17 @@ public class ShoppingStoreTest {
         step("Вход в систему");
         authorizationPage.UserLogin("standard_user", "secret_sauce");
 
+    // message='Unsupported token "@internal" while parsing selector "Locator@internal:text="Add to cart"i"
+    // не понятно как сделать, чтобы он добавил товар с любым индексом кнопки
         step("Добавить товар в корзину");
         // abstractPage.click(shoppingPage.addToCartButton());
 
         step("Перейти в корзину и проверить, что добавлен именно этот товар");
-       // abstractPage.click(shoppingPage.shoppingCart());
-        assert shoppingPage.backpackInTheCart(page): "В корзине не тот товар";
+
+    //waiting for Locator@[data-test='shopping-cart-link'
+    //в кейсе проверки на наличие кнопки все ок, а здесь не проходит
+        abstractPage.click(shoppingPage.shoppingCart());
+        assert shoppingPage.backpackInTheCart(page) : "В корзине не тот товар";
 
         step("Нажать на кноку удалить и удостовериться, что товар удален из корзины");
         abstractPage.click(shoppingPage.removeButton());
@@ -269,34 +301,43 @@ public class ShoppingStoreTest {
 
         step("Вернуться на главный экран с помощью специальной кнопки");
         abstractPage.click(shoppingPage.continueShoppingButton());
-        }
 
-
-
-    @Test
-    @Description("Тест-кейс BAS2. Оформление заказа с валидными данными")
-    public void BAS2() {
-
-        step("Инициализация страницы");
-        page = PlaywrightManagement.setupPlaywright("https://www.saucedemo.com/");
-
-        step("Вход в систему");
-        authorizationPage.UserLogin("standard_user", "secret_sauce");
-
-        step("Добавить товар в корзину");
-        // abstractPage.click(shoppingPage.addToCartSomeone());
-
-        step("Перейти в корзину и проверить, что добавлен именно этот товар");
-        abstractPage.click(shoppingPage.shoppingCart());
-        assert shoppingPage.backpackInTheCart(page) : "В корзине не тот товар";
-
-        step("Перейти на страницу оплаты с помощью специальной кнопки");
-        abstractPage.click(checkoutPage.checkout());
-
-        step("Ввести личную информацию для оформления заказа");
-        checkoutPage.checkoutInfo("MyFirstName", "MyLastName", 444);
-
-        step("Завершить оформление заказа");
-        abstractPage.click(checkoutPage.finishButton());
+        step("Закрытие браузера");
+        abstractPage.closePlaywright();
     }
+
+
+
+        @Test
+        @Description("Тест-кейс BAS2. Оформление заказа с валидными данными")
+        public void BAS2 () {
+
+            step("Инициализация страницы");
+            page = PlaywrightManagement.setupPlaywright("https://www.saucedemo.com/");
+
+            step("Вход в систему");
+            authorizationPage.UserLogin("standard_user", "secret_sauce");
+
+            step("Добавить товар в корзину");
+        //message='Unexpected token "@" while parsing selector "Locator@[data-test='add-to-cart-sauce-labs-backpack']"
+            //ошибка в написании локатора, но она скопирована корректно, а с другими public locator не работает
+            //abstractPage.click(shoppingPage.addToCartSomeone());
+
+            step("Перейти в корзину и проверить, что добавлен именно этот товар");
+            abstractPage.click(shoppingPage.shoppingCart());
+            assert shoppingPage.backpackInTheCart(page) : "В корзине не тот товар";
+
+        //без предыдущих локаторов не могу проверить последующий функционал
+            step("Перейти на страницу оплаты с помощью специальной кнопки");
+            abstractPage.click(checkoutPage.checkout());
+
+            step("Ввести личную информацию для оформления заказа");
+            checkoutPage.checkoutInfo("MyFirstName", "MyLastName", 444);
+
+            step("Завершить оформление заказа");
+            abstractPage.click(checkoutPage.finishButton());
+
+            step("Закрытие браузера");
+            abstractPage.closePlaywright();
+        }
     }

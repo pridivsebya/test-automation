@@ -8,12 +8,17 @@ import io.qameta.allure.Step;
 
 public class AuthorizationPage extends AbstractPage {
 
-    private final PlaywrightManagement playwrightManagement;
+    @Inject
+    private ShoppingPage shoppingPage;
+    @Inject
+    private AbstractPage abstractPage;
+    @Inject
+    private PlaywrightManagement playwrightManagement;
+    @Inject
+    private Page page;
+    @Inject
+    private CheckoutPage checkoutPage;
 
-   @Inject
-    public AuthorizationPage(PlaywrightManagement playwrightManagement) {
-        this.playwrightManagement = playwrightManagement;
-    }
 
     public Locator loginField() {
         return getByAriaRole(AriaRole.TEXTBOX, "Username");
@@ -28,7 +33,7 @@ public class AuthorizationPage extends AbstractPage {
     }
 
     public Locator errorMessage() {
-        return getByAriaRole(AriaRole.HEADING, "Epic sadface: Username and password do not match any user in this service");
+        return getByLocator("[data-test='error']");
     }
 
     public Locator pageFooter() {

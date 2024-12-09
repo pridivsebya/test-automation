@@ -1,11 +1,13 @@
 package playwright;
 
+import com.google.inject.Singleton;
 import com.microsoft.playwright.*;
 
+@Singleton
 public class PlaywrightManagement {
     private static Playwright playwright;
     private static Browser browser;
-    private static Page page;
+    static Page page;
 
     public static Page setupPlaywright(String url) {
         if (playwright == null) {
@@ -21,6 +23,13 @@ public class PlaywrightManagement {
             page.navigate(url);
         }
 
+        return page;
+    }
+
+    public Page getPage() {
+        if (page == null) {
+            throw new IllegalStateException("Page is not initialized. Please call setupPlaywright first.");
+        }
         return page;
     }
 

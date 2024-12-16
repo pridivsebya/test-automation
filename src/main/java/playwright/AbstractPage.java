@@ -34,18 +34,9 @@ public class AbstractPage {
         playwrightManagement.getPage().reload();
     }
 
-    public void click(Locator locator) {
-        playwrightManagement.getPage().click(String.valueOf(locator));
-    }
-
     @Step("Закрытие Playwright")
     public void closePlaywright() {
         PlaywrightManagement.close();
-    }
-
-    public Locator getByTextContain(String selector) {
-        return playwrightManagement.getPage().getByText(selector,
-                new Page.GetByTextOptions().setExact(false));
     }
 
     public Locator getByText(String selector) {

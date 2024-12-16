@@ -25,7 +25,15 @@ public class CheckoutPage extends AbstractPage {
     private Page page;
 
     public Locator checkout() {
-        return getByAriaRole(AriaRole.BUTTON, "#checkout");
+        return getByLocator("[data-test='checkout']");
+    }
+
+    public Locator removeButton() {
+        return getByLocator( "[data-test='remove-sauce-labs-backpack']");
+    }
+
+    public Locator continueShoppingButton() {
+        return getByLocator( "[data-test='continue-shopping']");
     }
 
    @Step("Личная информация для оформления заказа")
@@ -41,6 +49,6 @@ public class CheckoutPage extends AbstractPage {
    }
 
    public Locator finishButton() {
-        return getByAriaRole(AriaRole.BUTTON, "#finish");
+        return getByLocator("[data-test='finish']");
     }
 }

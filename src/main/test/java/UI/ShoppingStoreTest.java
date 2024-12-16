@@ -2,12 +2,10 @@ package UI;
 
 import com.google.inject.Inject;
 import com.microsoft.playwright.Page;
-import org.testng.annotations.AfterSuite;
 import org.testng.annotations.Guice;
 import org.testng.annotations.Test;
 import playwright.*;
 import io.qameta.allure.Description;
-import io.qameta.allure.Step;
 
 import java.util.Collections;
 import java.util.List;
@@ -15,7 +13,6 @@ import java.util.stream.Collectors;
 
 import static io.qameta.allure.Allure.step;
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
 
 @Guice(modules = PlaywrightModule.class)
 public class ShoppingStoreTest {
@@ -161,25 +158,23 @@ public class ShoppingStoreTest {
         step("Вход в систему");
         authorizationPage.UserLogin("standard_user", "secret_sauce");
 
-    //waiting for locator("img.inventory_item_img")
         step("Открыть карточку товара нажатием на картинку");
         shoppingPage.productImg().click();
 
         step("Вернуться на главную страницу");
-        shoppingPage.buttonBack();
+        shoppingPage.buttonBack().click();
 
-    //та же ошибка
         step("Открыть карточку товара нажатием на название товара");
         shoppingPage.productName().click();
 
         step("Положить товар в корзину");
-        shoppingPage.addToCartButton();
+        shoppingPage.addToCartButton().click();
 
         step("Удалить товар из корзины");
-        shoppingPage.removeButton();
+        shoppingPage.removeButton().click();
 
         step("Вернуться на главную страницу");
-        shoppingPage.buttonBack();
+        shoppingPage.buttonBack().click();
 
         step("Закрытие браузера");
         abstractPage.closePlaywright();
@@ -230,6 +225,7 @@ public class ShoppingStoreTest {
 
     @Test
     @Description("Тест-кейс HOM5.Работоспособность кнопок соц-сетей")
+    //Тест работает, только при включенном VPN для открытия страниц, заблокированных в РФ.
     public void HOM5() {
         step("Инициализация страницы");
         page = PlaywrightManagement.setupPlaywright("https://www.saucedemo.com/");
@@ -237,9 +233,8 @@ public class ShoppingStoreTest {
         step("Вход в систему");
         authorizationPage.UserLogin("standard_user", "secret_sauce");
 
-    //не находит ни один локатор соц сетей
         step("Нажимаем на иконку Твиттера");
-        abstractPage.click(shoppingPage.socialTwitter());
+        shoppingPage.socialTwitter().click();
 
         step("Переходим на новую вкладку");
         shoppingPage.navigateToNewTab(page);
@@ -248,7 +243,7 @@ public class ShoppingStoreTest {
         assert shoppingPage.isTwitterPagesOpened(page): "Открылась не та страница Twitter";
 
         step("Нажимаем на иконку Фейсбука");
-        abstractPage.click(shoppingPage.socialFacebook());
+        shoppingPage.socialFacebook().click();
 
         step("Переходим на новую вкладку");
         shoppingPage.navigateToNewTab(page);
@@ -257,7 +252,7 @@ public class ShoppingStoreTest {
         assert shoppingPage.isFacebookPagesOpened(page): "Открылась не та страница Facebook";
 
         step("Нажимаем на иконку Linkedin");
-        abstractPage.click(shoppingPage.socialLinkedin());
+        shoppingPage.socialLinkedin().click();
 
         step("Переходим на новую вкладку");
         shoppingPage.navigateToNewTab(page);
@@ -281,26 +276,22 @@ public class ShoppingStoreTest {
         step("Вход в систему");
         authorizationPage.UserLogin("standard_user", "secret_sauce");
 
-    // message='Unsupported token "@internal" while parsing selector "Locator@internal:text="Add to cart"i"
-    // не понятно как сделать, чтобы он добавил товар с любым индексом кнопки
         step("Добавить товар в корзину");
-        // abstractPage.click(shoppingPage.addToCartButton());
+        shoppingPage.addToCartSomeone().click();
 
         step("Перейти в корзину и проверить, что добавлен именно этот товар");
 
-    //waiting for Locator@[data-test='shopping-cart-link'
-    //в кейсе проверки на наличие кнопки все ок, а здесь не проходит
-        abstractPage.click(shoppingPage.shoppingCart());
+        shoppingPage.shoppingCart().click();
         assert shoppingPage.backpackInTheCart(page) : "В корзине не тот товар";
 
         step("Нажать на кноку удалить и удостовериться, что товар удален из корзины");
-        abstractPage.click(shoppingPage.removeButton());
+        checkoutPage.removeButton().click();
         if (page.locator("#cart_contents_container > div > div.cart_list > div.cart_item").isVisible()) {
             System.out.println("Продукт не удален из корзины");
         }
 
         step("Вернуться на главный экран с помощью специальной кнопки");
-        abstractPage.click(shoppingPage.continueShoppingButton());
+        checkoutPage.continueShoppingButton().click();
 
         step("Закрытие браузера");
         abstractPage.closePlaywright();
@@ -319,23 +310,20 @@ public class ShoppingStoreTest {
             authorizationPage.UserLogin("standard_user", "secret_sauce");
 
             step("Добавить товар в корзину");
-        //message='Unexpected token "@" while parsing selector "Locator@[data-test='add-to-cart-sauce-labs-backpack']"
-            //ошибка в написании локатора, но она скопирована корректно, а с другими public locator не работает
-            //abstractPage.click(shoppingPage.addToCartSomeone());
+            shoppingPage.addToCartSomeone().click();
 
             step("Перейти в корзину и проверить, что добавлен именно этот товар");
-            abstractPage.click(shoppingPage.shoppingCart());
+            shoppingPage.shoppingCart().click();
             assert shoppingPage.backpackInTheCart(page) : "В корзине не тот товар";
 
-        //без предыдущих локаторов не могу проверить последующий функционал
             step("Перейти на страницу оплаты с помощью специальной кнопки");
-            abstractPage.click(checkoutPage.checkout());
+            checkoutPage.checkout().click();
 
             step("Ввести личную информацию для оформления заказа");
             checkoutPage.checkoutInfo("MyFirstName", "MyLastName", 444);
 
             step("Завершить оформление заказа");
-            abstractPage.click(checkoutPage.finishButton());
+            checkoutPage.finishButton().click();
 
             step("Закрытие браузера");
             abstractPage.closePlaywright();

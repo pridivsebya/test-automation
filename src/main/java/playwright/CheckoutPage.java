@@ -14,14 +14,6 @@ import static playwright.PlaywrightManagement.page;
 public class CheckoutPage extends AbstractPage {
 
     @Inject
-    private ShoppingPage shoppingPage;
-    @Inject
-    private AbstractPage abstractPage;
-    @Inject
-    private AuthorizationPage authorizationPage;
-    @Inject
-    private PlaywrightManagement playwrightManagement;
-    @Inject
     private Page page;
 
     public Locator checkout() {

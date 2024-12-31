@@ -12,7 +12,7 @@ public class PlaywrightModule extends AbstractModule {
 
         bind(Page.class).toProvider(() -> {
             PlaywrightManagement playwrightManagement = new PlaywrightManagement();
-            return playwrightManagement.setupPlaywright("https://www.saucedemo.com/");  // Укажите URL по умолчанию или используйте метод теста
+            return playwrightManagement.setupPlaywright("https://www.saucedemo.com/");
         });
     }
 }

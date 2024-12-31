@@ -1,5 +1,6 @@
 package playwright;
 
+import com.google.inject.Inject;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.AriaRole;
@@ -12,8 +13,27 @@ import static playwright.PlaywrightManagement.page;
 
 public class CheckoutPage extends AbstractPage {
 
+    @Inject
+    private ShoppingPage shoppingPage;
+    @Inject
+    private AbstractPage abstractPage;
+    @Inject
+    private AuthorizationPage authorizationPage;
+    @Inject
+    private PlaywrightManagement playwrightManagement;
+    @Inject
+    private Page page;
+
     public Locator checkout() {
-        return getByAriaRole(AriaRole.BUTTON, "#checkout");
+        return getByLocator("[data-test='checkout']");
+    }
+
+    public Locator removeButton() {
+        return getByLocator( "[data-test='remove-sauce-labs-backpack']");
+    }
+
+    public Locator continueShoppingButton() {
+        return getByLocator( "[data-test='continue-shopping']");
     }
 
    @Step("Личная информация для оформления заказа")
@@ -29,6 +49,6 @@ public class CheckoutPage extends AbstractPage {
    }
 
    public Locator finishButton() {
-        return getByAriaRole(AriaRole.BUTTON, "#finish");
+        return getByLocator("[data-test='finish']");
     }
 }

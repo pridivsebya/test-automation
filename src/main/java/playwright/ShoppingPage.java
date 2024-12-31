@@ -1,5 +1,6 @@
 package playwright;
 
+import com.google.inject.Inject;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.AriaRole;
@@ -8,32 +9,42 @@ import io.qameta.allure.Step;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static playwright.PlaywrightManagement.page;
-
 public class ShoppingPage extends AbstractPage {
 
+    @Inject
+    private AbstractPage abstractPage;
+    @Inject
+    private AuthorizationPage authorizationPage;
+    @Inject
+    private PlaywrightManagement playwrightManagement;
+    @Inject
+    private Page page;
+    @Inject
+    private CheckoutPage checkoutPage;
+
+
     public Locator addToCartButton() {
-        return getByAriaRole(AriaRole.BUTTON, "Add to cart");
+        return getByText( "Add to cart");
     }
 
     public Locator addToCartSomeone() {
-        return getByAriaRole(AriaRole.BUTTON, "#add-to-cart-sauce-labs-backpack");
+        return getByLocator("[data-test='add-to-cart-sauce-labs-backpack']");
     }
 
     public Locator removeButton() {
-        return getByAriaRole(AriaRole.BUTTON, "Remove");
+        return getByText( "Remove");
     }
 
     public Locator shoppingCart() {
-        return getByAriaRole(AriaRole.LINK, "shopping_cart_container > a");
+        return getByLocator("[data-test='shopping-cart-link']");
     }
 
     public Locator title() {
-        return getByAriaRole(AriaRole.HEADING, "Products");
+        return getByText( "Products");
     }
 
     public Locator inventoryList() {
-        return getByAriaRole(AriaRole.LIST, "inventory-list");
+        return getByLocator( "[data-test='inventory-list']");
     }
 
     public Locator openMenu() {
@@ -41,20 +52,15 @@ public class ShoppingPage extends AbstractPage {
     }
 
     public Locator productName() {
-        return getByAriaRole(AriaRole.GENERIC, "#item_4_title_link > div");
+        return getByLocator("[data-test='item-4-title-link']");
     }
 
     public Locator productImg() {
-        return getByAriaRole(AriaRole.LINK, "#item_4_img_link > img");
+        return getByLocator("[data-test='item-4-img-link']");
     }
 
-    public void buttonBack() {
-        getByAriaRole(AriaRole.BUTTON, "back-to-products");
-    }
-
-    public Locator continueShoppingButton() {
-        getByAriaRole(AriaRole.BUTTON, "#continue-shopping");
-        return null;
+    public Locator buttonBack() {
+       return getByLocator("[data-test='back-to-products']");
     }
 
     @Step("Выбрать фильтрацию")
@@ -76,7 +82,7 @@ public class ShoppingPage extends AbstractPage {
     }
 
     public Locator socialTwitter() {
-        return getByAriaRole(AriaRole.LINK, "#page_wrapper > footer > ul > li.social_twitter > a");
+        return getByLocator("[data-test='social-twitter']");
     }
 
     @Step("Проверка, что открыта страница Twitter")
@@ -86,7 +92,7 @@ public class ShoppingPage extends AbstractPage {
     }
 
     public Locator socialFacebook() {
-        return getByAriaRole(AriaRole.LINK, "#page_wrapper > footer > ul > li.social_facebook > a");
+        return getByLocator("[data-test='social-facebook']");
     }
 
     @Step("Проверка, что открыта страница Facebook")
@@ -96,7 +102,7 @@ public class ShoppingPage extends AbstractPage {
     }
 
     public Locator socialLinkedin() {
-        return getByAriaRole(AriaRole.LINK, "#page_wrapper > footer > ul > li.social_linkedin > a");
+        return getByLocator("[data-test='social-linkedin']");
     }
 
     @Step("Проверка, что открыта страница Linkedin")
@@ -107,14 +113,26 @@ public class ShoppingPage extends AbstractPage {
 
     @Step("Перейти на новую вкладку")
     public void navigateToNewTab(Page page) {
-        page.context().pages().get(1).bringToFront();
+        page.waitForTimeout(1000); // Задержка для открытия вкладки
+        List<Page> pages = page.context().pages();
+
+        if (pages.size() > 1) {
+            pages.get(1).bringToFront();
+        } else {
+            page.click("selector-for-link"); // Повторный клик
+            page.waitForTimeout(1000); // Ещё раз ждём
+            if (page.context().pages().size() > 1) {
+                page.context().pages().get(1).bringToFront();
+            } else {
+                throw new IllegalStateException("Вкладка не была открыта даже после повторной попытки");
+            }
+        }
     }
 
     @Step("Проверка, что в корзину добавился именно тот товар")
     public boolean backpackInTheCart(Page page) {
-        String title = page.title();
-        return title.contains("Your Cart") || title.contains("Sauce Labs Backpack");
+        page.waitForSelector(".cart_item_label");
+        String cartItemText = page.locator("[data-test='item-4-title-link']").innerText();
+        return cartItemText.contains("Sauce Labs Backpack");
     }
-
-
 }

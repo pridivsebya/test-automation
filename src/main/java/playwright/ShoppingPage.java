@@ -12,15 +12,7 @@ import java.util.stream.Collectors;
 public class ShoppingPage extends AbstractPage {
 
     @Inject
-    private AbstractPage abstractPage;
-    @Inject
-    private AuthorizationPage authorizationPage;
-    @Inject
-    private PlaywrightManagement playwrightManagement;
-    @Inject
     private Page page;
-    @Inject
-    private CheckoutPage checkoutPage;
 
 
     public Locator addToCartButton() {
@@ -88,7 +80,7 @@ public class ShoppingPage extends AbstractPage {
     @Step("Проверка, что открыта страница Twitter")
     public boolean isTwitterPagesOpened(Page page) {
         String title = page.title();
-        return title.contains("Sauce Lab") || title.contains("Twitter");
+        return title.contains("Sauce Lab") && title.contains("Twitter");
     }
 
     public Locator socialFacebook() {
@@ -98,7 +90,7 @@ public class ShoppingPage extends AbstractPage {
     @Step("Проверка, что открыта страница Facebook")
     public boolean isFacebookPagesOpened(Page page) {
         String title = page.title();
-        return title.contains("Sauce Lab") || title.contains("Facebook");
+        return title.contains("Sauce Lab") && title.contains("Facebook");
     }
 
     public Locator socialLinkedin() {
@@ -108,24 +100,15 @@ public class ShoppingPage extends AbstractPage {
     @Step("Проверка, что открыта страница Linkedin")
     public boolean isLinkedinPagesOpened(Page page) {
         String title = page.title();
-        return title.contains("Sauce Lab") || title.contains("Linkedin");
+        return title.contains("Sauce Lab") && title.contains("Linkedin");
     }
 
     @Step("Перейти на новую вкладку")
     public void navigateToNewTab(Page page) {
-        page.waitForTimeout(1000); // Задержка для открытия вкладки
         List<Page> pages = page.context().pages();
 
         if (pages.size() > 1) {
             pages.get(1).bringToFront();
-        } else {
-            page.click("selector-for-link"); // Повторный клик
-            page.waitForTimeout(1000); // Ещё раз ждём
-            if (page.context().pages().size() > 1) {
-                page.context().pages().get(1).bringToFront();
-            } else {
-                throw new IllegalStateException("Вкладка не была открыта даже после повторной попытки");
-            }
         }
     }
 

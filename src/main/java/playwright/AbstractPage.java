@@ -12,15 +12,8 @@ import playwright.PlaywrightManagement;
 public class AbstractPage {
 
     @Inject
-    private ShoppingPage shoppingPage;
-    @Inject
-    private AuthorizationPage authorizationPage;
-    @Inject
     private PlaywrightManagement playwrightManagement;
-    @Inject
-    private Page page;
-    @Inject
-    private CheckoutPage checkoutPage;
+
 
     public Locator getByLocator(String selector) {
         return playwrightManagement.getPage().locator(selector);

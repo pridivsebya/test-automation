@@ -24,8 +24,6 @@ public class ShoppingStoreTest {
     @Inject
     private AuthorizationPage authorizationPage;
     @Inject
-    private PlaywrightManagement playwrightManagement;
-    @Inject
     private Page page;
     @Inject
     private CheckoutPage checkoutPage;
@@ -33,8 +31,8 @@ public class ShoppingStoreTest {
 
 
     @Test
-    @Description("Тест-кейс LOG1. Авторизация с корректным логином и/или паролем")
-    public void LOG1() {
+    @Description("Тест-кейс LOG1. Авторизация с корректным логином и паролем")
+    public void AuthorizationWithTheCorrectLoginAndPassword() {
 
         step("Инициализация страницы");
         page = PlaywrightManagement.setupPlaywright("https://www.saucedemo.com/");
@@ -57,7 +55,7 @@ public class ShoppingStoreTest {
 
     @Test
     @Description("Тест-кейс LOG2. Авторизация с некорректным логином и/или паролем")
-    public void LOG2() {
+    public void AuthorizationWithIncorrectLoginAndOrPassword() {
 
         step("Инициализация страницы");
         page = PlaywrightManagement.setupPlaywright("https://www.saucedemo.com/");
@@ -98,7 +96,7 @@ public class ShoppingStoreTest {
 
     @Test
     @Description("Тест-кейс HOM1.Проверка наличия основных атрибутов на главной странице")
-    public void HOM1() {
+    public void CheckingThePresenceOfBasicAttributesOnTheMainPage() {
 
         step("Инициализация страницы");
         page = PlaywrightManagement.setupPlaywright("https://www.saucedemo.com/");
@@ -123,8 +121,8 @@ public class ShoppingStoreTest {
 
 
     @Test
-    @Description("Тест-кейс HOM2. Добавление товара в корзинину и последующее его удаление")
-    public void HOM2() {
+    @Description("Тест-кейс HOM2. Добавление товара в корзину и последующее его удаление")
+    public void AddingAProductToCartAndThenDeletingIt() {
 
         step("Инициализация страницы");
         page = PlaywrightManagement.setupPlaywright("https://www.saucedemo.com/");
@@ -150,7 +148,7 @@ public class ShoppingStoreTest {
 
     @Test
     @Description("Тест-кейс HOM3.Функциональность карточки товара")
-    public void HOM3() {
+    public void ProductCardFunctionality() {
 
         step("Инициализация страницы");
         page = PlaywrightManagement.setupPlaywright("https://www.saucedemo.com/");
@@ -184,7 +182,7 @@ public class ShoppingStoreTest {
 
     @Test
     @Description("Тест-кейс HOM4.Функциональность фильтра товаров")
-    public void HOM4() {
+    public void ProductFilterFunctionality() {
         step("Инициализация страницы");
         page = PlaywrightManagement.setupPlaywright("https://www.saucedemo.com/");
 
@@ -226,7 +224,7 @@ public class ShoppingStoreTest {
     @Test
     @Description("Тест-кейс HOM5.Работоспособность кнопок соц-сетей")
     //Тест работает, только при включенном VPN для открытия страниц, заблокированных в РФ.
-    public void HOM5() {
+    public void FunctionalityOfSocialMediaButtons() {
         step("Инициализация страницы");
         page = PlaywrightManagement.setupPlaywright("https://www.saucedemo.com/");
 
@@ -268,7 +266,7 @@ public class ShoppingStoreTest {
 
     @Test
     @Description("Тест-кейс BAS1. Функциональность корзины")
-    public void BAS1() {
+    public void BasketFunctionality() {
 
         step("Инициализация страницы");
         page = PlaywrightManagement.setupPlaywright("https://www.saucedemo.com/");
@@ -301,7 +299,7 @@ public class ShoppingStoreTest {
 
         @Test
         @Description("Тест-кейс BAS2. Оформление заказа с валидными данными")
-        public void BAS2 () {
+        public void OrderingWithValidData() {
 
             step("Инициализация страницы");
             page = PlaywrightManagement.setupPlaywright("https://www.saucedemo.com/");

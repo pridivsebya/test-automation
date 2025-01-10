@@ -9,15 +9,8 @@ import io.qameta.allure.Step;
 public class AuthorizationPage extends AbstractPage {
 
     @Inject
-    private ShoppingPage shoppingPage;
-    @Inject
-    private AbstractPage abstractPage;
-    @Inject
     private PlaywrightManagement playwrightManagement;
-    @Inject
-    private Page page;
-    @Inject
-    private CheckoutPage checkoutPage;
+
 
 
     public Locator loginField() {
